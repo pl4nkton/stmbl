@@ -244,6 +244,7 @@ clean:
 	rm -rf $(OBJDIR)
 	@$(MAKE) -f bootloader/Makefile clean
 	@$(MAKE) -f stm32f103/Makefile clean
+	@$(MAKE) -f stm32f103/bootloader/Makefile clean
 
 # Include the base rules
 #
