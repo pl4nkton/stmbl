@@ -37,6 +37,7 @@ SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_gpio.c
 SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_tim.c
 SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_flash.c
 SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_usart.c
+SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_iwdg.c
 
 SOURCES += lib/CMSIS/Device/ST/STM32F10x/Source/system_stm32f10x.c
 SOURCES += lib/CMSIS/Device/ST/STM32F10x/Source/startup_stm32f10x_ld.s

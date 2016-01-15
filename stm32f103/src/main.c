@@ -98,6 +98,23 @@ void SysTick_Handler(void)
 	systime++;
 }
 
+void enable_watchdog(uint16_t ms)
+{
+    IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);
+
+    // The 32kHz LSI oscillator is quite inaccurate and has
+    // a specified frequency range of 17 .. 47 kHz. We're
+    // using the worst case value here:
+    //
+    IWDG_SetPrescaler(IWDG_Prescaler_32);
+    IWDG_SetReload(ms * 47 / 32);
+
+    IWDG_WriteAccessCmd(IWDG_WriteAccess_Disable);
+
+    IWDG_ReloadCounter();
+    IWDG_Enable();
+}
+
 void RCC_Configuration(void)
 {
 	RCC_ClocksTypeDef RCC_Clocks;
@@ -460,6 +477,7 @@ int main(void)
 	setup_adc();
 	tim1_init();
 	usart_init();
+	enable_watchdog(50);
 
 	PWM_U = 0;
 	PWM_V = 0;
@@ -496,5 +514,6 @@ int main(void)
 				temp = tempb(temp_raw);
 			}
 		}
+		IWDG_ReloadCounter();
 	}
 }
