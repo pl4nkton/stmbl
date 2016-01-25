@@ -33,7 +33,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-_estack = 0x20002800;    /* end of 4K RAM */
+_estack = ORIGIN(RAM)+LENGTH(RAM); /* end of 10K RAM */
 
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0;      /* required amount of heap  */
@@ -96,7 +96,7 @@ SECTIONS
 
   .ARM.attributes : { *(.ARM.attributes) } > FLASH
 
-  .preinit_array     :
+  .preinit_array :
   {
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
