@@ -17,6 +17,7 @@ INCDIRS += stm32f103/bootloader/inc
 INCDIRS += shared
 
 SOURCES += stm32f103/bootloader/src/main.c
+#SOURCES += stm32f103/bootloader/src/bootloader.c
 SOURCES += stm32f103/bootloader/src/version.c
 SOURCES += shared/common.c
 
@@ -24,19 +25,20 @@ SOURCES += shared/common.c
 CPPFLAGS += -DUSE_STDPERIPH_DRIVER
 #CPPFLAGS += -DUSE_FULL_ASSERT
 
-STD_PERIPH_DIR = lib/STM32F10x_StdPeriph_Driver-V3.6.1
+PERIPH_DRV_DIR = lib/STM32F10x_StdPeriph_Driver-V3.6.1
 
-INCDIRS += $(STD_PERIPH_DIR)/inc
+INCDIRS += $(PERIPH_DRV_DIR)/inc
 INCDIRS += lib/CMSIS/Include
 INCDIRS += lib/CMSIS/Device/ST/STM32F10x/Include
 
-SOURCES += $(STD_PERIPH_DIR)/src/misc.c
-SOURCES += $(STD_PERIPH_DIR)/src/stm32f10x_crc.c
-SOURCES += $(STD_PERIPH_DIR)/src/stm32f10x_flash.c
+SOURCES += $(PERIPH_DRV_DIR)/src/misc.c
+SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_crc.c
+SOURCES += $(PERIPH_DRV_DIR)/src/stm32f10x_flash.c
 
 SOURCES += lib/CMSIS/Device/ST/STM32F10x/Source/startup_stm32f10x_ld.s
 
 CPPFLAGS += -DSTM32F10X_LD
+CPPFLAGS += -DHSE_VALUE=8000000
 LDSCRIPT = stm32f103/bootloader/stm32_flash.ld
 
 #============================================================================
@@ -113,7 +115,7 @@ SIZE     = $(TOOLCHAIN)size
 NM       = $(TOOLCHAIN)nm
 MKDIR    = mkdir
 POSTLD   = tools/add_version_info.py # -q
-#POSTLD   = cp
+
 # Compiler flags to generate dependency files
 #
 GENDEPFLAGS = -MMD -MP
