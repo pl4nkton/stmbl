@@ -7,6 +7,8 @@
 #define APP_RANGE_VALID(a, s) (!(((a) | (s)) & 3) && (a) >= APP_START && ((a) + (s)) <= APP_END)
 #define VERSION_INFO_OFFSET 0x10c // from hv.map ".version_info" symbol
 
+#define BOOT_UART2
+
 static volatile const struct version_info *app_info = (void *) (APP_START + VERSION_INFO_OFFSET);
 
 static int app_ok(void)
@@ -82,14 +84,28 @@ static void rcc_config(void)
     RCC->APB2ENR = RCC_APB2ENR_IOPAEN | RCC_APB2ENR_IOPBEN | RCC_APB2ENR_IOPCEN | RCC_APB2ENR_AFIOEN;
     // enabe CRC unit clock
     RCC->AHBENR |= RCC_AHBENR_CRCEN;
-    /* enable usart2 clock */
-    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 }
 
+#ifdef BOOT_UART2
 static void usart_init(void)
 {
-    // init usart
-    GPIOA->CRL = 0x4444EB44; // set gpioa[2,3] to 50 MHz, AFIO; 2 -> pp, 3 -> open drain
+    // enable usart2 clock
+    RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
+    // set gpioa[2,3] to 50 MHz, AFIO; 2 -> pp, 3 -> open drain
+    GPIOA->CRL = 0x4444EB44;
+
+    uint32_t tmpreg = USART2->CR2;
+    tmpreg &= (uint16_t) 0xCFFF;
+    USART2->CR2 = (uint16_t) tmpreg;
+
+    tmpreg = USART2->CR1;
+    // Clear M, PCE, PS, TE and RE bits
+    tmpreg &= (uint16_t) 0xE9F3;
+    USART2->CR1 = tmpreg | USART_Mode_Rx | USART_Mode_Tx; // configure usart: rx, tx
+
+    tmpreg = USART2->CR3;
+    tmpreg &= (uint16_t) 0xFCFF;
+    USART2->CR3 = (uint16_t) tmpreg;
 
     #define APBCLOCK 36000000
 
@@ -105,8 +121,24 @@ static void usart_init(void)
 
     // Write to USART BRR
     USART2->BRR = (uint16_t) tmpreg;
-    USART2->CR1 = USART_Clock_Enable | USART_Mode_Rx | USART_Mode_Tx; // configure usart: rx, tx
+    USART2->CR1 |= USART_Clock_Enable;
 }
+
+void uart_getc(void)
+{
+	if (USART2->SR & USART_SR_RXNE) {
+		return USART2->DR;
+	}
+}
+
+void uart_putc(char c)
+{
+	if (USART2->SR & USART_SR_TXE) {
+		USART2->DR = c;
+	}
+}
+
+#endif // BOOT_UART2
 
 int main(void)
 {
@@ -118,8 +150,10 @@ int main(void)
     if (  !app_ok()) {//Memory map, datasheet (*((unsigned long *) 0x2001C000) == 0xDEADBEEF) ||
 //        *((unsigned long *) 0x2001C000) = 0xCAFEFEED; //Reset bootloader trigger
         GPIOC->BSRR = 0x10002; //gelb
+#ifdef BOOT_UART2
         usart_init();
-
+        //bootloader();
+#endif // BOOT_UART2
         while (1);
     } else {
         GPIOC->BSRR = 0x00004; // rot, grün
