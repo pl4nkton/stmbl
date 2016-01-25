@@ -3,6 +3,8 @@
 #include "version.h"
 #include <math.h>
 
+static volatile uint32_t __attribute__((section (".start_bootloader"))) boot_flag;
+
 #define ARES 4096.0// analog resolution, 12 bit
 #define AREF 3.3// analog reference voltage
 
@@ -453,6 +455,12 @@ void USART2_IRQHandler(){
 	}
 }
 
+static void start_bootloader(void)
+{
+	boot_flag = 0xDEADBEEF;
+	NVIC_SystemReset();
+}
+
 int main(void)
 {
 	// Relocate interrupt vectors
@@ -505,5 +513,7 @@ int main(void)
 				temp = tempb(temp_raw);
 			}
 		}
+		if (crc)
+			start_bootloader();
 	}
 }
