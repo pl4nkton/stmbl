@@ -2,8 +2,10 @@
 #include "version.h"
 #include "usart.h"
 
-#define APP_START 0x08001000 // app start in flash
-#define APP_END   0x08008000 // flash end
+extern uint32_t _app_start;
+#define APP_START ((uint32_t) &_app_start) // app start in flash
+extern uint32_t _flash_end;
+#define APP_END ((uint32_t) &_flash_end) // flash end
 #define APP_RANGE_VALID(a, s) (!(((a) | (s)) & 3) && (a) >= APP_START && ((a) + (s)) <= APP_END)
 #define VERSION_INFO_OFFSET 0x10c // from hv.map ".version_info" symbol
 
