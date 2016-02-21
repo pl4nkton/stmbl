@@ -17,7 +17,7 @@ INCDIRS += stm32f103/bootloader/inc
 INCDIRS += shared
 
 SOURCES += stm32f103/bootloader/src/main.c
-#SOURCES += stm32f103/bootloader/src/bootloader.c
+SOURCES += stm32f103/bootloader/src/bootloader.c
 SOURCES += stm32f103/bootloader/src/usart.c
 SOURCES += stm32f103/bootloader/src/version.c
 SOURCES += shared/common.c

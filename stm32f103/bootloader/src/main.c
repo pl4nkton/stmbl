@@ -1,5 +1,6 @@
 #include "stm32f10x.h"
 #include "version.h"
+#include "bootloader.h"
 #include "usart.h"
 
 extern uint32_t _app_start;
@@ -101,7 +102,7 @@ int main(void)
         GPIOC->BSRR = 0x10002; //gelb
 #ifdef BOOT_UART2
         usart_init();
-        //bootloader();
+        bootloader();
 #endif // BOOT_UART2
         while (1);
     } else {
