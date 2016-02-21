@@ -34,6 +34,7 @@ ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM)+LENGTH(RAM); /* end of 10K RAM */
+_start_bootloader = 0x20000000;
 
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0;      /* required amount of heap  */
@@ -120,13 +121,8 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = .;
 
-  .start_bootloader : AT (_sidata)
-  {
-    KEEP (*(.start_bootloader)) /* keep variable even if not referenced */
-  } >RAM
-
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : AT (_sidata + SIZEOF (.start_bootloader))
+  .data 0x20000004: AT (_sidata)
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */

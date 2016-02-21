@@ -3,7 +3,7 @@
 #include "version.h"
 #include <math.h>
 
-static volatile uint32_t __attribute__((section (".start_bootloader"))) boot_flag;
+static volatile uint32_t __attribute__((section ("start_bootloader"))) boot_flag;
 
 #define ARES 4096.0// analog resolution, 12 bit
 #define AREF 3.3// analog reference voltage

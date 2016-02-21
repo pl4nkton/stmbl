@@ -1,6 +1,5 @@
 #include "stm32f10x.h"
 #include "version.h"
-#include "common.h"
 
 #define APP_START 0x08001000 // app start in flash
 #define APP_END   0x08008000 // flash end
@@ -9,6 +8,7 @@
 
 #define BOOT_UART2
 
+extern uint32_t _start_bootloader; // .data starts at 0x20000000
 static volatile const struct version_info *app_info = (void *) (APP_START + VERSION_INFO_OFFSET);
 
 static int app_ok(void)
@@ -147,8 +147,8 @@ int main(void)
     GPIOC->CRL = 0x44444222; // set gpioc[2-0] to pp, 2 MHz, output
 
     GPIOC->BSRR = 0x01; // red led on
-    if (  !app_ok()) {//Memory map, datasheet (*((unsigned long *) 0x2001C000) == 0xDEADBEEF) ||
-//        *((unsigned long *) 0x2001C000) = 0xCAFEFEED; //Reset bootloader trigger
+    if ((_start_bootloader == 0xDEADBEEF) || !app_ok()) {
+        _start_bootloader = 0xCAFEFEED; //Reset bootloader trigger
         GPIOC->BSRR = 0x10002; //gelb
 #ifdef BOOT_UART2
         usart_init();

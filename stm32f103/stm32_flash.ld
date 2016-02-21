@@ -120,13 +120,9 @@ SECTIONS
   /* used by the startup to initialize data */
   _sidata = .;
 
-  .start_bootloader : AT (_sidata)
-  {
-    KEEP (*(.start_bootloader)) /* keep variable even if not referenced */
-  } >RAM
-
+  _start_bootloader = 0x20000000;
   /* Initialized data sections goes into RAM, load LMA copy after code */
-  .data : AT (_sidata + SIZEOF (.start_bootloader))
+  .data 0x20000004: AT (_sidata)
   {
     . = ALIGN(4);
     _sdata = .;        /* create a global symbol at data start */
