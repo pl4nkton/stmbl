@@ -26,7 +26,7 @@ SOURCES += src/hal_tbl.c
 
 COMPS += src/comps/hw/io4.c
 COMPS += src/comps/encm.c
-COMPS += src/comps/hv.c
+COMPS += src/comps/hv_f3.c
 COMPS += src/comps/adc.c
 COMPS += src/comps/enc_fb.c
 COMPS += src/comps/enc_cmd.c

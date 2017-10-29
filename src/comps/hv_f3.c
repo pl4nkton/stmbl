@@ -5,7 +5,7 @@
 #include "angle.h"
 #include "stm32f4xx_conf.h"
 #include "hw/hw.h"
-#include "common.h"
+#include "common_f3.h"
 
 
 HAL_COMP(hv);
@@ -270,7 +270,7 @@ static void rt_func(float period, volatile void *ctx_ptr, volatile hal_pin_inst_
 
 
 hal_comp_t hv_comp_struct = {
-    .name      = "hv",
+    .name      = "hv_f3",
     .nrt       = 0,
     .rt        = rt_func,
     .frt       = 0,

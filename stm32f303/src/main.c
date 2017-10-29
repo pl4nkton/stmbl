@@ -32,7 +32,7 @@
 #include "angle.h"
 #include "usbd_cdc_if.h"
 #include "version.h"
-#include "common.h"
+#include "common_f3.h"
 #include "commands.h"
 #include "f3hw.h"
 

@@ -9,9 +9,6 @@
 #pragma once
 
 #include "stm32f4xx_conf.h"
-//#include "misc.h"
-#include "version.h"
-#include "common.h"
 #include "hw/hw.h"
 #define U_ID ((__IO uint32_t *)0x1FFF7A10)
 
